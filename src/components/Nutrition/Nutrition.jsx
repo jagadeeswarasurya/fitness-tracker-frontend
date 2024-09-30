@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import NutritionForm from './NutritionForm'; // Ensure this is the correct path
+import NutritionForm from './Nutritionform'; // Ensure this is the correct path
 import axios from 'axios';
 
 const Nutrition = () => {
