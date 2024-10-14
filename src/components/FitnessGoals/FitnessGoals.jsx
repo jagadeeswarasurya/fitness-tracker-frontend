@@ -1,63 +1,45 @@
-import React, { useState, useEffect } from 'react';
-import FitnessGoalForm from './FitnessGoalForm'; // Ensure this is the correct path
-import axios from 'axios';
+// src/components/FitnessGoals.jsx
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getFitnessGoalsStart, getFitnessGoalsSuccess, getFitnessGoalsFailure } from '../../slices/fitnessGoalsSlice'; // Adjust the import path accordingly
+import FitnessGoalForm from './FitnessGoalForm'; // Ensure this path is correct
+import { fetchFitnessGoals } from '../../utils/api'; // Import the API call for fetching fitness goals
 
 const FitnessGoals = () => {
-    const [goals, setGoals] = useState([]);
-    const [refresh, setRefresh] = useState(false); // Add refresh state
+    const dispatch = useDispatch();
+    const fitnessGoals = useSelector((state) => state.fitnessGoals.goals); // Adjust state path accordingly
+    const loading = useSelector((state) => state.fitnessGoals.loading);
+    const error = useSelector((state) => state.fitnessGoals.error);
+    const userId = useSelector((state) => state.user.id); // Assuming user ID is stored in the state
 
-    // Fetch goals when refresh state changes
     useEffect(() => {
         const fetchGoals = async () => {
+            dispatch(getFitnessGoalsStart());
             try {
-                const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/fitness-goals`, {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}`,
-                    },
-                });
-                setGoals(response.data);
-            } catch (error) {
-                console.error('Error fetching goals:', error);
+                const data = await fetchFitnessGoals(userId); // API call using the userId
+                dispatch(getFitnessGoalsSuccess(data));
+            } catch (err) {
+                console.error("Error fetching fitness goals:", err); // Log the error for debugging
+                dispatch(getFitnessGoalsFailure(err.message));
             }
         };
 
-        fetchGoals();
-    }, [refresh]); // Fetch goals whenever refresh changes
+        if (userId) {
+            fetchGoals(); // Fetch goals if user ID is available
+        }
+    }, [dispatch, userId]);
 
     return (
-        <div className="container my-5">
-            <h1 className="text-center mb-4">Fitness Goals</h1>
-            
-            {/* FitnessGoalForm */}
-            <div className="card shadow mb-5">
-                <div className="card-body">
-                    <h2 className="card-title">Add a New Goal</h2>
-                    <FitnessGoalForm setRefresh={setRefresh} /> {/* Pass setRefresh to the form */}
-                </div>
-            </div>
-
-            {/* Display Fitness Goals */}
-            <div className="card shadow">
-                <div className="card-body">
-                    <h2 className="card-title">Your Fitness Goals</h2>
-                    <div className="row">
-                        {goals.length > 0 ? (
-                            goals.map((goal) => (
-                                <div className="col-md-4 mb-3" key={goal.id}>
-                                    <div className="card">
-                                        <div className="card-body">
-                                            <h5 className="card-title">{goal.goalType}</h5>
-                                            <p className="card-text">Target: {goal.target}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))
-                        ) : (
-                            <p className="text-center">No fitness goals found. Add one above!</p>
-                        )}
-                    </div>
-                </div>
-            </div>
+        <div>
+            <h1>Your Fitness Goals</h1>
+            <FitnessGoalForm />
+            {loading && <p>Loading...</p>}
+            {error && <p>Error: {error}</p>}
+            <ul>
+                {fitnessGoals.map((goal) => (
+                    <li key={goal._id}>{goal.goalType} - Target: {goal.target}</li>
+                ))}
+            </ul>
         </div>
     );
 };

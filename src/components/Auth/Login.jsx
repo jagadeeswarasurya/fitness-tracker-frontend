@@ -1,3 +1,4 @@
+// src/components/Auth/Login.jsx
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -13,18 +14,22 @@ const Login = () => {
         e.preventDefault();
         setIsLoading(true);
         setMessage('');
+
         try {
             const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/users/login`, {
                 username,
                 password,
             });
+
+            // Store the token in localStorage
             localStorage.setItem('token', response.data.token);
             setMessage('Login successful!');
             setUsername('');
             setPassword('');
             navigate('/'); // Redirect to the home page after login
         } catch (error) {
-            setMessage(error.response?.data?.message || 'Login failed');
+            // Handle error responses
+            setMessage(error.response?.data?.message || 'Login failed. Please try again.');
         } finally {
             setIsLoading(false);
         }

@@ -1,33 +1,34 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
-    const [isLoading, setIsLoading] = useState(false); // Added loading state
-    const navigate = useNavigate(); // Initialize navigate
+    const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setIsLoading(true); // Start loading when the form is submitted
-        setMessage(''); // Clear previous messages
+        setIsLoading(true);
+        setMessage('');
+
         try {
             const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/users/register`, {
                 username,
                 password,
             });
             setMessage(response.data.message);
-            setUsername(''); // Clear input fields after successful registration
+            setUsername('');
             setPassword('');
             setTimeout(() => {
                 navigate('/login'); // Redirect to login page after successful registration
-            }, 2000); // Add a 2-second delay before redirect
+            }, 2000);
         } catch (error) {
-            setMessage(error.response?.data?.message || 'Registration failed');
+            setMessage(error.response?.data?.message || 'Registration failed. Please try again.');
         } finally {
-            setIsLoading(false); // End loading state
+            setIsLoading(false);
         }
     };
 
@@ -45,7 +46,7 @@ const Register = () => {
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         required
-                        autoComplete="username" // Added autocomplete attribute
+                        autoComplete="username"
                     />
                 </div>
                 <div className="form-group">
@@ -57,11 +58,11 @@ const Register = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
-                        autoComplete="new-password" // Added autocomplete attribute for password
+                        autoComplete="new-password"
                     />
                 </div>
                 <button type="submit" className="btn btn-primary btn-block mt-3" disabled={isLoading}>
-                    {isLoading ? 'Registering...' : 'Register'} {/* Show loading text */}
+                    {isLoading ? 'Registering...' : 'Register'}
                 </button>
                 <p className="mt-3 text-center">
                     Already have an account? <a href="/login">Login here</a>

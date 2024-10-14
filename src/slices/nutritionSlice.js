@@ -3,47 +3,45 @@ import { createSlice } from '@reduxjs/toolkit';
 const nutritionSlice = createSlice({
     name: 'nutrition',
     initialState: {
-        entries: [], // Store for nutrition entries
+        nutrition: [],
         loading: false,
         error: null,
     },
     reducers: {
-        getEntriesStart: (state) => {
-            state.loading = true; // Set loading state
+        getNutritionStart: (state) => {
+            state.loading = true;
         },
-        getEntriesSuccess: (state, action) => {
-            state.loading = false; // Loading finished
-            state.entries = action.payload; // Set nutrition entries
-            state.error = null; // Clear any previous error
+        getNutritionSuccess: (state, action) => {
+            state.loading = false;
+            state.nutrition = action.payload;
+            state.error = null;
         },
-        getEntriesFailure: (state, action) => {
-            state.loading = false; // Loading finished
-            state.error = action.payload; // Set error message
+        getNutritionFailure: (state, action) => {
+            state.loading = false;
+            state.error = action.payload;
         },
-        addEntry: (state, action) => {
-            state.entries.push(action.payload); // Add new entry to the array
+        addNutrition: (state, action) => {
+            state.nutrition.push(action.payload);
         },
-        updateEntry: (state, action) => {
-            const index = state.entries.findIndex(entry => entry._id === action.payload._id);
+        updateNutrition: (state, action) => {
+            const index = state.nutrition.findIndex(item => item._id === action.payload._id);
             if (index !== -1) {
-                state.entries[index] = action.payload; // Update existing entry
+                state.nutrition[index] = action.payload;
             }
         },
-        deleteEntry: (state, action) => {
-            state.entries = state.entries.filter(entry => entry._id !== action.payload); // Remove entry
+        deleteNutrition: (state, action) => {
+            state.nutrition = state.nutrition.filter(item => item._id !== action.payload);
         },
     },
 });
 
-// Export actions to use in components
 export const { 
-    getEntriesStart, 
-    getEntriesSuccess, 
-    getEntriesFailure, 
-    addEntry, 
-    updateEntry, 
-    deleteEntry 
+    getNutritionStart, 
+    getNutritionSuccess, 
+    getNutritionFailure, 
+    addNutrition, 
+    updateNutrition, 
+    deleteNutrition 
 } = nutritionSlice.actions;
 
-// Export reducer to configure store
 export default nutritionSlice.reducer;

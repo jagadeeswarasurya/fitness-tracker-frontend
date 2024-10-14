@@ -5,97 +5,98 @@ body, html {
 
 
 /* Ensure the navbar is fixed at the top */
-.navbar {
+/* .navbar {
   position: fixed;
   top: 0;
   width: 100%;
-  z-index: 1000; /* Ensures it stays on top of other content */
-}
+  z-index: 1000; 
+} */
 
 /* Add padding to the body or main content */
-body, .main-content {
-  padding-top: 70px; /* Adjust this value based on your navbar height */
-}
+/* body, .main-content {
+  padding-top: 70px; 
+} */
 /* Apply this to the main container of the page */
-html, body {
-  height: 100%; /* Make sure the page takes the full height of the viewport */
+/* html, body {
+  height: 100%; 
   margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
-}
+} */
 
 /* Main content wrapper */
-.main-content {
-  flex: 1; /* This makes sure the content takes up the available space */
-  padding: 20px; /* Adjust as needed for your layout */
-}
+/* .main-content {
+  flex: 1; 
+  padding: 20px; 
+} */
 
 /* Footer styles */
-.footer {
-  background-color: #343a40; /* Dark background */
-  color: white; /* White text for contrast */
+/* .footer {
+  background-color: #343a40; 
+  color: white; 
   padding: 20px;
   text-align: center;
-}
+  margin-top: 10px;
+} */
 
 /* Optional: Footer text style */
-.footer-text {
+/* .footer-text {
   font-size: 14px;
-  color: #f8f9fa; /* Light color for text */
-}
+  color: #f8f9fa; 
+} */
 
-.footer a {
+/* .footer a {
   color: white;
   text-decoration: none;
 }
 
 .footer a:hover {
   text-decoration: underline;
-}
+} */
 
 /* General styling for the form */
-.fitness-goal-form {
-  background-color: #f8f9fa; /* Light background for contrast */
-  border-radius: 8px; /* Rounded corners */
-  padding: 20px; /* Padding around the form */
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-  max-width: 400px; /* Max width of the form */
-  margin: 20px auto; /* Center the form */
-}
+/* .fitness-goal-form {
+  background-color: #f8f9fa; 
+  border-radius: 8px; 
+  padding: 20px; 
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
+  max-width: 400px; 
+  margin: 20px auto; 
+} */
 
 /* Styling for the input fields */
-.fitness-goal-form input,
+/* .fitness-goal-form input,
 .fitness-goal-form select {
-  width: 100%; /* Full width */
-  padding: 10px; /* Padding for input fields */
-  margin: 10px 0; /* Margin around input fields */
-  border: 1px solid #ced4da; /* Border for input fields */
-  border-radius: 4px; /* Rounded corners */
-}
+  width: 100%; 
+  padding: 10px; 
+  margin: 10px 0; 
+  border: 1px solid #ced4da; 
+  border-radius: 4px;
+} */
 
 /* Styling for the button */
-.fitness-goal-form button {
-  background-color: #007bff; /* Primary color */
-  color: white; /* Text color */
-  padding: 10px; /* Padding for button */
-  border: none; /* No border */
-  border-radius: 4px; /* Rounded corners */
-  cursor: pointer; /* Pointer cursor */
-  transition: background-color 0.3s; /* Smooth transition */
-}
+/* .fitness-goal-form button {
+  background-color: #007bff; 
+  color: white; 
+  padding: 10px; 
+  border: none; 
+  border-radius: 4px; 
+  cursor: pointer;
+  transition: background-color 0.3s; 
+} */
 
-.fitness-goal-form button:hover {
-  background-color: #0056b3; /* Darker shade on hover */
-}
+/* .fitness-goal-form button:hover {
+  background-color: #0056b3; 
+} */
 
 /* Heading styling */
-.fitness-goal-form h2 {
-  text-align: center; /* Center the heading */
-  color: #333; /* Dark text color */
-}
+/* .fitness-goal-form h2 {
+  text-align: center; 
+  color: #333;
+} */
 
-#root {
+/* #root {
   max-width: 100%;
   margin: 0 auto;
   padding: 2rem;
@@ -138,4 +139,4 @@ html, body {
   color: #888;
 }
 
-
+ */

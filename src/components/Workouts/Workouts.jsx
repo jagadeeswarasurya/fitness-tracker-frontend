@@ -1,30 +1,32 @@
-// src/components/workouts/Workouts.jsx
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getWorkoutsStart, getWorkoutsSuccess, getWorkoutsFailure } from '../../slices/workoutsSlice';
 import WorkoutForm from './WorkoutForm'; // Ensure this path is correct
+import { fetchWorkoutData } from '../../utils/api'; // Import the API call for fetching workouts
 
 const Workouts = () => {
     const dispatch = useDispatch();
     const workouts = useSelector((state) => state.workouts.workouts);
     const loading = useSelector((state) => state.workouts.loading);
     const error = useSelector((state) => state.workouts.error);
+    const userId = useSelector((state) => state.user.id); // Assuming user ID is stored in the state
 
     useEffect(() => {
         const fetchWorkouts = async () => {
             dispatch(getWorkoutsStart());
             try {
-                // Replace with your API call logic to fetch workouts
-                const response = await fetch('YOUR_API_URL'); // Replace with your API URL
-                const data = await response.json();
+                const data = await fetchWorkoutData(userId); // API call using the userId
                 dispatch(getWorkoutsSuccess(data));
             } catch (err) {
+                console.error("Error fetching workouts:", err); // Log the error for debugging
                 dispatch(getWorkoutsFailure(err.message));
             }
         };
 
-        fetchWorkouts();
-    }, [dispatch]);
+        if (userId) {
+            fetchWorkouts(); // Fetch workouts if user ID is available
+        }
+    }, [dispatch, userId]);
 
     return (
         <div>
@@ -34,7 +36,7 @@ const Workouts = () => {
             {error && <p>Error: {error}</p>}
             <ul>
                 {workouts.map((workout) => (
-                    <li key={workout._id}>{workout.exercise} - {workout.duration} minutes</li> // Use workout._id as key
+                    <li key={workout._id}>{workout.exercise} - {workout.duration} minutes</li>
                 ))}
             </ul>
         </div>

@@ -1,119 +1,106 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { addNutrition } from '../../slices/nutritionSlice'; // Replace with the correct path
 import axios from 'axios';
-import PropTypes from 'prop-types';
 
-const NutritionForm = ({ setRefresh }) => {
+const NutritionForm = () => {
+    const dispatch = useDispatch();
     const [foodItem, setFoodItem] = useState('');
     const [calories, setCalories] = useState('');
     const [protein, setProtein] = useState('');
     const [carbs, setCarbs] = useState('');
     const [fats, setFats] = useState('');
-    const [date, setDate] = useState('');
-    const [error, setError] = useState('');
-    const [successMessage, setSuccessMessage] = useState('');
-
-    const resetForm = () => {
-        setFoodItem('');
-        setCalories('');
-        setProtein('');
-        setCarbs('');
-        setFats('');
-        setDate('');
-        setError(''); // Clear error
-        setSuccessMessage(''); // Clear success message
-    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError(''); // Clear previous errors
-        setSuccessMessage(''); // Clear previous success messages
-
-        // Ensure all fields are valid
-        if (!foodItem || !calories || !protein || !carbs || !fats || !date) {
-            setError('All fields are required.');
-            return;
-        }
+        
+        const newNutrition = {
+            userId: localStorage.getItem('userId'), // Ensure you have userId in local storage
+            foodItem,
+            calories,
+            protein,
+            carbs,
+            fats,
+        };
 
         try {
-            await axios.post(
-                `${import.meta.env.VITE_API_URL}/api/nutrition`,
-                {
-                    foodItem,
-                    calories: Number(calories), // Ensure calories is a number
-                    protein: Number(protein), // Ensure protein is a number
-                    carbs: Number(carbs), // Ensure carbs is a number
-                    fats: Number(fats), // Ensure fats is a number
-                    date,
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/nutrition`, newNutrition, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
-                {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}`,
-                    },
-                }
-            );
-
-            setSuccessMessage('Nutrition entry added successfully!'); // Set success message
-            resetForm(); // Reset form fields
-            setRefresh((prev) => !prev); // Trigger refresh
+            });
+            dispatch(addNutrition(response.data));
+            // Clear form fields
+            setFoodItem('');
+            setCalories('');
+            setProtein('');
+            setCarbs('');
+            setFats('');
         } catch (error) {
-            console.error('Error creating nutrition entry:', error);
-            setError(error.response?.data?.message || 'Error creating nutrition entry');
+            console.error('Error adding nutrition:', error);
         }
     };
 
     return (
         <form onSubmit={handleSubmit}>
-            <input
-                type="text"
-                placeholder="Food Item"
-                value={foodItem}
-                onChange={(e) => setFoodItem(e.target.value)}
-                required
-            />
-            <input
-                type="number"
-                placeholder="Calories"
-                value={calories}
-                onChange={(e) => setCalories(e.target.value)}
-                required
-            />
-            <input
-                type="number"
-                placeholder="Protein (g)"
-                value={protein}
-                onChange={(e) => setProtein(e.target.value)}
-                required
-            />
-            <input
-                type="number"
-                placeholder="Carbs (g)"
-                value={carbs}
-                onChange={(e) => setCarbs(e.target.value)}
-                required
-            />
-            <input
-                type="number"
-                placeholder="Fats (g)"
-                value={fats}
-                onChange={(e) => setFats(e.target.value)}
-                required
-            />
-            <input
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                required
-            />
-            <button type="submit">Add Nutrition Entry</button>
-            {error && <p style={{ color: 'red' }}>{error}</p>} {/* Display error in red */}
-            {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>} {/* Display success message in green */}
+            <div className="mb-3">
+                <label htmlFor="foodItem" className="form-label">Food Item</label>
+                <input 
+                    type="text" 
+                    className="form-control" 
+                    id="foodItem" 
+                    value={foodItem} 
+                    onChange={(e) => setFoodItem(e.target.value)} 
+                    required 
+                />
+            </div>
+            <div className="mb-3">
+                <label htmlFor="calories" className="form-label">Calories</label>
+                <input 
+                    type="number" 
+                    className="form-control" 
+                    id="calories" 
+                    value={calories} 
+                    onChange={(e) => setCalories(e.target.value)} 
+                    required 
+                />
+            </div>
+            <div className="mb-3">
+                <label htmlFor="protein" className="form-label">Protein (g)</label>
+                <input 
+                    type="number" 
+                    className="form-control" 
+                    id="protein" 
+                    value={protein} 
+                    onChange={(e) => setProtein(e.target.value)} 
+                    required 
+                />
+            </div>
+            <div className="mb-3">
+                <label htmlFor="carbs" className="form-label">Carbohydrates (g)</label>
+                <input 
+                    type="number" 
+                    className="form-control" 
+                    id="carbs" 
+                    value={carbs} 
+                    onChange={(e) => setCarbs(e.target.value)} 
+                    required 
+                />
+            </div>
+            <div className="mb-3">
+                <label htmlFor="fats" className="form-label">Fats (g)</label>
+                <input 
+                    type="number" 
+                    className="form-control" 
+                    id="fats" 
+                    value={fats} 
+                    onChange={(e) => setFats(e.target.value)} 
+                    required 
+                />
+            </div>
+            <button type="submit" className="btn btn-primary">Add Nutrition</button>
         </form>
     );
-};
-
-// PropTypes validation
-NutritionForm.propTypes = {
-    setRefresh: PropTypes.func.isRequired, // Validate setRefresh as a required function
 };
 
 export default NutritionForm;
