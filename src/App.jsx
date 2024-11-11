@@ -7,6 +7,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Register from './components/Auth/Register';
 import Login from './components/Auth/Login';
+import Logout from './components/Auth/Logout';
 import UserProfile from './components/Auth/UserProfile';
 import FitnessGoals from './components/FitnessGoals/FitnessGoals';
 import Nutrition from './components/Nutrition/Nutrition';
@@ -21,6 +22,7 @@ const App = () => {
                     <Route path="/" element={<Home />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/login" element={<Login />} />
+                    <Route path="/logout" element={<Logout />} />
                     <Route path="/profile" element={<UserProfile />} />
                     <Route path="/FitnessGoals" element={<FitnessGoals />} />
                     <Route path="/nutrition" element={<Nutrition />} />

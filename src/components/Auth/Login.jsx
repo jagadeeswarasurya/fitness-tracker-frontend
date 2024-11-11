@@ -1,7 +1,8 @@
-// src/components/Auth/Login.jsx
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../../slices/userSlice'; // Import the setUser action
 
 const Login = () => {
     const [username, setUsername] = useState('');
@@ -9,6 +10,7 @@ const Login = () => {
     const [message, setMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+    const dispatch = useDispatch(); // Hook to dispatch actions
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -23,12 +25,14 @@ const Login = () => {
 
             // Store the token in localStorage
             localStorage.setItem('token', response.data.token);
+
+            // Dispatch user data to the store
+            dispatch(setUser({ id: response.data.user.id, name: response.data.user.username }));
             setMessage('Login successful!');
             setUsername('');
             setPassword('');
             navigate('/'); // Redirect to the home page after login
         } catch (error) {
-            // Handle error responses
             setMessage(error.response?.data?.message || 'Login failed. Please try again.');
         } finally {
             setIsLoading(false);

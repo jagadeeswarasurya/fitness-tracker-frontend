@@ -1,4 +1,3 @@
-// src/components/UserProfile.jsx
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchNutritionData, fetchWorkoutData, fetchFitnessGoals } from '../../utils/api'; 
@@ -60,11 +59,15 @@ const UserProfile = () => {
                     <section className="mb-4">
                         <h2>Your Workouts</h2>
                         <ul className="list-group">
-                            {workouts.map((workout) => (
-                                <li key={workout._id} className="list-group-item">
-                                    {workout.exercise} - {workout.duration} minutes
-                                </li>
-                            ))}
+                            {workouts.length > 0 ? (
+                                workouts.map((workout) => (
+                                    <li key={workout._id} className="list-group-item">
+                                        {workout.exercise} - {workout.duration} minutes
+                                    </li>
+                                ))
+                            ) : (
+                                <li className="list-group-item">No workouts available.</li>
+                            )}
                         </ul>
                     </section>
                 </div>
@@ -77,11 +80,15 @@ const UserProfile = () => {
                             <p className="text-danger">Error: {error}</p>
                         ) : (
                             <ul className="list-group">
-                                {nutrition.map((item) => (
-                                    <li key={item._id} className="list-group-item">
-                                        {item.foodItem} - {item.calories} calories
-                                    </li>
-                                ))}
+                                {nutrition.length > 0 ? (
+                                    nutrition.map((item) => (
+                                        <li key={item._id} className="list-group-item">
+                                            {item.foodItem} - {item.calories} calories
+                                        </li>
+                                    ))
+                                ) : (
+                                    <li className="list-group-item">No nutrition data available.</li>
+                                )}
                             </ul>
                         )}
                     </section>

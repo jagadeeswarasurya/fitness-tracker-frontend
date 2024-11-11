@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../../slices/userSlice'; // Import the setUser action
 
 const Register = () => {
     const [username, setUsername] = useState('');
@@ -8,6 +10,7 @@ const Register = () => {
     const [message, setMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+    const dispatch = useDispatch(); // Hook to dispatch actions
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -19,13 +22,16 @@ const Register = () => {
                 username,
                 password,
             });
+            // Dispatch user data to the store
+            dispatch(setUser({ id: response.data.user.id, name: response.data.user.username }));
             setMessage(response.data.message);
-            setUsername('');
+            setUsername(''); // Clear input fields after success
             setPassword('');
             setTimeout(() => {
                 navigate('/login'); // Redirect to login page after successful registration
             }, 2000);
         } catch (error) {
+            console.error('Registration error:', error); // Log the error for debugging
             setMessage(error.response?.data?.message || 'Registration failed. Please try again.');
         } finally {
             setIsLoading(false);
