@@ -1,0 +1,44 @@
+/* Common styles for all components */
+.card {
+    transition: transform 0.2s, box-shadow 0.2s;
+    height: 100%;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.stats-badge {
+    font-size: 0.85rem;
+    padding: 0.5em 0.8em;
+    margin: 0.2em;
+}
+
+.action-buttons {
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.card:hover .action-buttons {
+    opacity: 1;
+}
+
+.form-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+    
+    .card {
+        margin-bottom: 1rem;
+    }
+    
+    .action-buttons {
+        opacity: 1;
+    }
+} 

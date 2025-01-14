@@ -7,7 +7,7 @@ const userSlice = createSlice({
             id: null,
             name: '',
         },
-        isLoggedIn: false, // Track login status
+        isLoggedIn: false, 
     },
     reducers: {
         setUser: (state, action) => {
@@ -15,14 +15,14 @@ const userSlice = createSlice({
                 id: action.payload.id,
                 name: action.payload.name,
             };
-            state.isLoggedIn = true; // Set login status to true
+            state.isLoggedIn = true; 
         },
         logoutUser: (state) => {
             state.user = {
                 id: null,
                 name: '',
             };
-            state.isLoggedIn = false; // Reset login status
+            state.isLoggedIn = false;
         },
     },
 });

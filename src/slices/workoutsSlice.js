@@ -1,4 +1,4 @@
-// src/slices/workoutsSlice.js
+
 import { createSlice } from '@reduxjs/toolkit';
 
 const workoutsSlice = createSlice({
@@ -36,7 +36,7 @@ const workoutsSlice = createSlice({
     },
 });
 
-// Export actions for use in components
+
 export const { 
     getWorkoutsStart, 
     getWorkoutsSuccess, 
@@ -46,5 +46,5 @@ export const {
     deleteWorkout 
 } = workoutsSlice.actions;
 
-// Export the reducer to be included in the store
+
 export default workoutsSlice.reducer;

@@ -1,0 +1,29 @@
+.profile-container {
+    background-color: #f8f9fa;
+    min-height: calc(100vh - 56px);
+}
+
+.info-item {
+    background: #fff;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.info-item label {
+    color: #6c757d;
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.info-item p {
+    margin: 0;
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(67, 97, 238, 0.25);
+} 

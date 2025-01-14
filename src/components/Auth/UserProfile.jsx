@@ -1,113 +1,187 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchNutritionData, fetchWorkoutData, fetchFitnessGoals } from '../../utils/api'; 
-import { getNutritionSuccess, getNutritionFailure } from '../../slices/nutritionSlice'; 
-import { getWorkoutsSuccess, getWorkoutsFailure } from '../../slices/workoutsSlice'; 
-import { getFitnessGoalsSuccess, getFitnessGoalsFailure } from '../../slices/fitnessGoalsSlice'; 
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import './UserProfile.css';
 
 const UserProfile = () => {
-    const dispatch = useDispatch();
-    const userId = useSelector((state) => state.user.id); 
-    const userName = useSelector((state) => state.user.name); // Get user's name from state
-    const workouts = useSelector((state) => state.workouts.workouts);
-    const fitnessGoals = useSelector((state) => state.fitnessGoals.goals);
-    const nutrition = useSelector((state) => state.nutrition.nutrition);
-    const loading = useSelector((state) => state.nutrition.loading);
-    const error = useSelector((state) => state.nutrition.error);
+    const [profileData, setProfileData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [editMode, setEditMode] = useState(false);
+    const [formData, setFormData] = useState({
+        username: '',
+        currentPassword: '',
+        newPassword: '',
+        confirmNewPassword: ''
+    });
 
     useEffect(() => {
-        const fetchData = async () => {
-            // Fetch Nutrition Data
-            try {
-                const nutritionData = await fetchNutritionData(userId);
-                dispatch(getNutritionSuccess(nutritionData));
-            } catch (err) {
-                console.error("Error fetching nutrition data:", err);
-                dispatch(getNutritionFailure(err.message));
-            }
+        fetchProfileData();
+    }, []);
 
-            // Fetch Workout Data
-            try {
-                const workoutsData = await fetchWorkoutData(userId); 
-                dispatch(getWorkoutsSuccess(workoutsData));
-            } catch (err) {
-                console.error("Error fetching workouts data:", err);
-                dispatch(getWorkoutsFailure(err.message));
-            }
-
-            // Fetch Fitness Goals Data
-            try {
-                const goalData = await fetchFitnessGoals(userId); 
-                dispatch(getFitnessGoalsSuccess(goalData));
-            } catch (err) {
-                console.error("Error fetching fitness goals data:", err);
-                dispatch(getFitnessGoalsFailure(err.message));
-            }
-        };
-
-        if (userId) {
-            fetchData();
+    const fetchProfileData = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.get('http://localhost:5000/api/users/profile', {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setProfileData(response.data);
+            setFormData({
+                username: response.data.username || '',
+                currentPassword: '',
+                newPassword: '',
+                confirmNewPassword: ''
+            });
+            setLoading(false);
+        } catch (err) {
+            setError(err.response?.data?.message || 'Failed to fetch profile data');
+            setLoading(false);
         }
-    }, [dispatch, userId]);
+    };
+
+    const handleInputChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        
+        if (formData.newPassword !== formData.confirmNewPassword) {
+            setError('New passwords do not match');
+            return;
+        }
+
+        try {
+            const token = localStorage.getItem('token');
+            const updateData = {
+                username: formData.username,
+                ...(formData.currentPassword && formData.newPassword ? {
+                    currentPassword: formData.currentPassword,
+                    newPassword: formData.newPassword
+                } : {})
+            };
+
+            const response = await axios.put(
+                'http://localhost:5000/api/users/profile',
+                updateData,
+                {
+                    headers: { Authorization: `Bearer ${token}` }
+                }
+            );
+            setProfileData(response.data);
+            setEditMode(false);
+            setFormData(prev => ({
+                ...prev,
+                currentPassword: '',
+                newPassword: '',
+                confirmNewPassword: ''
+            }));
+            setError(null);
+        } catch (err) {
+            setError(err.response?.data?.message || 'Failed to update profile');
+        }
+    };
+
+    if (loading) {
+        return (
+            <div className="container mt-5 text-center">
+                <div className="spinner-border text-primary" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        );
+    }
 
     return (
-        <div className="container mt-5" style={{ maxHeight: '80vh', overflowY: 'auto' }}>
-            <h1 className="mb-4">User Profile</h1>
-            {userName && <h2 className="mb-4">Welcome, {userName}!</h2>} {/* Display the user's name */}
-            <div className="row">
-                <div className="col-md-4">
-                    <section className="mb-4">
-                        <h2>Your Workouts</h2>
-                        <ul className="list-group">
-                            {workouts.length > 0 ? (
-                                workouts.map((workout) => (
-                                    <li key={workout._id} className="list-group-item">
-                                        {workout.exercise} - {workout.duration} minutes
-                                    </li>
-                                ))
-                            ) : (
-                                <li className="list-group-item">No workouts available.</li>
-                            )}
-                        </ul>
-                    </section>
-                </div>
-                <div className="col-md-4">
-                    <section className="mb-4">
-                        <h2>Your Nutrition Details</h2>
-                        {loading ? (
-                            <p>Loading nutrition data...</p>
-                        ) : error ? (
-                            <p className="text-danger">Error: {error}</p>
-                        ) : (
-                            <ul className="list-group">
-                                {nutrition.length > 0 ? (
-                                    nutrition.map((item) => (
-                                        <li key={item._id} className="list-group-item">
-                                            {item.foodItem} - {item.calories} calories
-                                        </li>
-                                    ))
-                                ) : (
-                                    <li className="list-group-item">No nutrition data available.</li>
+        <div className="profile-container py-5">
+            <div className="container">
+                <div className="row justify-content-center">
+                    <div className="col-md-8">
+                        <div className="card shadow">
+                            <div className="card-body">
+                                <div className="d-flex justify-content-between align-items-center mb-4">
+                                    <h2 className="card-title mb-0">Profile Information</h2>
+                                    <button 
+                                        className="btn btn-primary"
+                                        onClick={() => setEditMode(!editMode)}
+                                    >
+                                        <i className={`bi bi-${editMode ? 'x' : 'pencil'} me-2`}></i>
+                                        {editMode ? 'Cancel' : 'Edit Profile'}
+                                    </button>
+                                </div>
+
+                                {error && (
+                                    <div className="alert alert-danger" role="alert">
+                                        {error}
+                                    </div>
                                 )}
-                            </ul>
-                        )}
-                    </section>
-                </div>
-                <div className="col-md-4">
-                    <section className="mb-4">
-                        <h2>Your Fitness Goals</h2>
-                        <ul className="list-group">
-                            {fitnessGoals.length > 0 ? (
-                                fitnessGoals.map((goal) => (
-                                    <li key={goal._id} className="list-group-item">
-                                        {goal.goal}
-                                    </li>
-                                ))
-                            ) : (
-                                <li className="list-group-item">No fitness goals available.</li>
-                            )}
-                        </ul>
-                    </section>
+
+                                {editMode ? (
+                                    <form onSubmit={handleSubmit}>
+                                        <div className="mb-3">
+                                            <label className="form-label">Username</label>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                name="username"
+                                                value={formData.username}
+                                                onChange={handleInputChange}
+                                                required
+                                            />
+                                        </div>
+                                        <div className="mb-3">
+                                            <label className="form-label">Current Password</label>
+                                            <input
+                                                type="password"
+                                                className="form-control"
+                                                name="currentPassword"
+                                                value={formData.currentPassword}
+                                                onChange={handleInputChange}
+                                                placeholder="Enter current password to change it"
+                                            />
+                                        </div>
+                                        <div className="mb-3">
+                                            <label className="form-label">New Password</label>
+                                            <input
+                                                type="password"
+                                                className="form-control"
+                                                name="newPassword"
+                                                value={formData.newPassword}
+                                                onChange={handleInputChange}
+                                                placeholder="Enter new password"
+                                            />
+                                        </div>
+                                        <div className="mb-3">
+                                            <label className="form-label">Confirm New Password</label>
+                                            <input
+                                                type="password"
+                                                className="form-control"
+                                                name="confirmNewPassword"
+                                                value={formData.confirmNewPassword}
+                                                onChange={handleInputChange}
+                                                placeholder="Confirm new password"
+                                            />
+                                        </div>
+                                        <div className="d-grid">
+                                            <button type="submit" className="btn btn-primary">
+                                                <i className="bi bi-check-lg me-2"></i>
+                                                Save Changes
+                                            </button>
+                                        </div>
+                                    </form>
+                                ) : (
+                                    <div className="profile-info">
+                                        <div className="info-item">
+                                            <label>Username</label>
+                                            <p>{profileData.username}</p>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

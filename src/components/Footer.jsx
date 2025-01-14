@@ -1,60 +1,90 @@
 import React from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css'; 
 import { Link } from 'react-router-dom';
+import './Footer.css';
 
 const Footer = () => {
-  return (
-    <footer className="bg-dark text-light py-4 mt-10">
-      <div className="container">
-        <div className="row">
-          {/* About Section */}
-          <div className="col-md-4">
-            <h5>About Fitness Tracker</h5>
-            <p>
-              Fitness Tracker helps you achieve your fitness goals by tracking your workouts, nutrition, and progress. Stay motivated and reach your goals with personalized plans and insights.
-            </p>
-          </div>
+    const currentYear = new Date().getFullYear();
 
-          {/* Useful Links */}
-          <div className="col-md-4">
-            <h5>Useful Links</h5>
-            <ul className="list-unstyled">
-              <li><Link to="/FitnessGoals" className="text-light">Set Fitness Goals</Link></li>
-              <li><Link to="/Workouts" className="text-light">Track Workouts</Link></li>
-              <li><Link to="/Nutrition" className="text-light">Log Nutrition</Link></li>
-              <li><Link to="/settings" className="text-light">Settings</Link></li>
-            </ul>
-          </div>
+    return (
+        <footer className="footer bg-dark text-light py-5 mt-auto">
+            <div className="container">
+                <div className="row g-4">
+                    {/* About Section */}
+                    <div className="col-lg-4 col-md-6">
+                        <h5 className="mb-3">About Fitness Tracker</h5>
+                        <p className="mb-4">
+                            Your personal fitness companion helping you achieve your health and fitness goals. 
+                            Track workouts, monitor nutrition, and stay motivated on your fitness journey.
+                        </p>
+                        <div className="social-links">
+                            <a href="#" className="me-3" title="Facebook">
+                                <i className="bi bi-facebook"></i>
+                            </a>
+                            <a href="#" className="me-3" title="Twitter">
+                                <i className="bi bi-twitter"></i>
+                            </a>
+                            <a href="#" className="me-3" title="Instagram">
+                                <i className="bi bi-instagram"></i>
+                            </a>
+                        </div>
+                    </div>
 
-          {/* Social Media Links */}
-          <div className="col-md-4">
-            <h5>Follow Us</h5>
-            <ul className="list-unstyled d-flex">
-              <li>
-                <a href="https://www.facebook.com" className="text-light me-3" target="_blank" rel="noopener noreferrer">
-                  <i className="fab fa-facebook-f"></i> Facebook
-                </a>
-              </li>
-              <li>
-                <a href="https://www.twitter.com" className="text-light me-3" target="_blank" rel="noopener noreferrer">
-                  <i className="fab fa-twitter"></i> Twitter
-                </a>
-              </li>
-              <li>
-                <a href="https://www.instagram.com" className="text-light" target="_blank" rel="noopener noreferrer">
-                  <i className="fab fa-instagram"></i> Instagram
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
+                    {/* Quick Links */}
+                    <div className="col-lg-4 col-md-6">
+                        <h5 className="mb-3">Quick Links</h5>
+                        <ul className="list-unstyled">
+                            <li className="mb-2">
+                                <Link to="/dashboard" className="footer-link">
+                                    <i className="bi bi-chevron-right me-2"></i>Dashboard
+                                </Link>
+                            </li>
+                            <li className="mb-2">
+                                <Link to="/workouts" className="footer-link">
+                                    <i className="bi bi-chevron-right me-2"></i>Workouts
+                                </Link>
+                            </li>
+                            <li className="mb-2">
+                                <Link to="/nutrition" className="footer-link">
+                                    <i className="bi bi-chevron-right me-2"></i>Nutrition
+                                </Link>
+                            </li>
+                            <li className="mb-2">
+                                <Link to="/fitnessgoals" className="footer-link">
+                                    <i className="bi bi-chevron-right me-2"></i>Fitness Goals
+                                </Link>
+                            </li>
+                        </ul>
+                    </div>
 
-        <div className="text-center pt-3 border-top mt-4">
-          <p className="mb-0">&copy; {new Date().getFullYear()} Fitness Tracker. All rights reserved.</p>
-        </div>
-      </div>
-    </footer>
-  );
+                    {/* Contact Info */}
+                    <div className="col-lg-4 col-md-6">
+                        <h5 className="mb-3">Contact Us</h5>
+                        <ul className="list-unstyled">
+                            <li className="mb-2">
+                                <i className="bi bi-geo-alt me-2"></i>
+                                123 Fitness Street, Healthy City
+                            </li>
+                            <li className="mb-2">
+                                <i className="bi bi-envelope me-2"></i>
+                                support@fitnesstracker.com
+                            </li>
+                            <li className="mb-2">
+                                <i className="bi bi-telephone me-2"></i>
+                                +1 234 567 8900
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                {/* Copyright */}
+                <div className="text-center border-top border-secondary pt-4 mt-4">
+                    <p className="mb-0">
+                        © {currentYear} Fitness Tracker. All rights reserved.
+                    </p>
+                </div>
+            </div>
+        </footer>
+    );
 };
 
 export default Footer;

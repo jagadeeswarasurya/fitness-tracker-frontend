@@ -1,42 +1,42 @@
-// src/slices/fitnessGoalsSlice.js
+
 import { createSlice } from '@reduxjs/toolkit';
 
 const fitnessGoalsSlice = createSlice({
     name: 'fitnessGoals',
     initialState: {
-        goals: [], // Initialize the state for fitness goals
+        goals: [], 
         loading: false,
         error: null,
     },
     reducers: {
         getFitnessGoalsStart: (state) => {
-            state.loading = true; // Set loading to true when fetching starts
+            state.loading = true; 
         },
         getFitnessGoalsSuccess: (state, action) => {
-            state.loading = false; // Set loading to false when fetching succeeds
-            state.goals = action.payload; // Store the fetched goals
-            state.error = null; // Reset error state
+            state.loading = false; 
+            state.goals = action.payload; 
+            state.error = null; 
         },
         getFitnessGoalsFailure: (state, action) => {
-            state.loading = false; // Set loading to false when fetching fails
-            state.error = action.payload; // Store the error message
+            state.loading = false; 
+            state.error = action.payload; 
         },
         addFitnessGoal: (state, action) => {
-            state.goals.push(action.payload); // Add a new fitness goal to the list
+            state.goals.push(action.payload); 
         },
         updateFitnessGoal: (state, action) => {
-            const index = state.goals.findIndex(goal => goal._id === action.payload._id); // Find the goal to update
+            const index = state.goals.findIndex(goal => goal._id === action.payload._id); 
             if (index !== -1) {
-                state.goals[index] = action.payload; // Update the goal if found
+                state.goals[index] = action.payload; 
             }
         },
         deleteFitnessGoal: (state, action) => {
-            state.goals = state.goals.filter(goal => goal._id !== action.payload); // Remove the goal from the list
+            state.goals = state.goals.filter(goal => goal._id !== action.payload); 
         },
     },
 });
 
-// Export actions for use in components
+
 export const { 
     getFitnessGoalsStart, 
     getFitnessGoalsSuccess, 
@@ -46,5 +46,5 @@ export const {
     deleteFitnessGoal 
 } = fitnessGoalsSlice.actions;
 
-// Export the reducer to be included in the store
+
 export default fitnessGoalsSlice.reducer;

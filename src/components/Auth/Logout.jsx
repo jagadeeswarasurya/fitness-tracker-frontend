@@ -8,13 +8,13 @@ const Logout = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Remove user token from local storage
+        
         localStorage.removeItem('token');
 
-        // Dispatch logout action to Redux store
+       
         dispatch(logoutUser());
 
-        // Redirect to login page after logout
+        
         navigate('/login'); // Redirect to the login page
     }, [dispatch, navigate]);
 
