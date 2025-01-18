@@ -87,6 +87,28 @@ const Workouts = () => {
         }
     };
 
+    const handleUpdate = async (id, updatedData) => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.put(`${API_URL}/api/workouts/${id}`, updatedData, {
+                headers: { 
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            // Update the state with the new data
+            setWorkouts(workouts.map(workout => 
+                workout._id === id ? response.data : workout
+            ));
+            
+            setEditingWorkout(null); // Exit edit mode
+            setError(null);
+        } catch (err) {
+            setError(err.response?.data?.message || 'Failed to update workout');
+        }
+    };
+
     if (loading) {
         return (
             <div className="container mt-5 text-center">
