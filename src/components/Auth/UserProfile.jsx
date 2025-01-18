@@ -22,9 +22,14 @@ const UserProfile = () => {
     const fetchProfileData = async () => {
         try {
             const token = localStorage.getItem('token');
+            console.log('Fetching profile from:', `${API_URL}/api/users/profile`);
             const response = await axios.get(`${API_URL}/api/users/profile`, {
-                headers: { Authorization: `Bearer ${token}` }
+                headers: { 
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
             });
+            console.log('Profile response:', response.data);
             setProfileData(response.data);
             setFormData({
                 ...formData,
@@ -32,6 +37,7 @@ const UserProfile = () => {
             });
             setLoading(false);
         } catch (err) {
+            console.error('Profile fetch error:', err);
             setError(err.response?.data?.message || 'Failed to fetch profile data');
             setLoading(false);
         }
@@ -48,6 +54,18 @@ const UserProfile = () => {
         e.preventDefault();
         setError(null);
 
+        // Validate passwords if changing password
+        if (formData.newPassword) {
+            if (formData.newPassword !== formData.confirmNewPassword) {
+                setError('New passwords do not match');
+                return;
+            }
+            if (!formData.currentPassword) {
+                setError('Current password is required to change password');
+                return;
+            }
+        }
+
         try {
             const token = localStorage.getItem('token');
             const updateData = {
@@ -58,19 +76,27 @@ const UserProfile = () => {
                 })
             };
 
-            await axios.put(`${API_URL}/api/users/profile`, updateData, {
-                headers: { Authorization: `Bearer ${token}` }
+            console.log('Updating profile at:', `${API_URL}/api/users/update`); // Changed endpoint
+            const response = await axios.put(`${API_URL}/api/users/update`, updateData, { // Changed from /profile to /update
+                headers: { 
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
             });
+            console.log('Update response:', response.data);
 
-            setProfileData(response.data);
-            setEditMode(false);
-            setFormData(prev => ({
-                ...prev,
+            // Reset password fields
+            setFormData({
+                ...formData,
                 currentPassword: '',
                 newPassword: '',
                 confirmNewPassword: ''
-            }));
+            });
+            
+            setEditMode(false);
+            fetchProfileData(); // Refresh profile data
         } catch (err) {
+            console.error('Profile update error:', err);
             setError(err.response?.data?.message || 'Failed to update profile');
         }
     };
