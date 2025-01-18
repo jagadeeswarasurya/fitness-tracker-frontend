@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Profile.css';
+import { API_URL } from '../../config/config';
 
 const Profile = () => {
     const [user, setUser] = useState(null);
@@ -21,7 +22,7 @@ const Profile = () => {
     const fetchUserProfile = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get('http://localhost:5000/api/users/profile', {
+            const response = await axios.get(`${API_URL}/api/users/profile`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setUser(response.data);
@@ -63,16 +64,12 @@ const Profile = () => {
                 updateData.newPassword = formData.newPassword;
             }
 
-            await axios.put(
-                'http://localhost:5000/api/users/profile',
-                updateData,
-                {
-                    headers: { Authorization: `Bearer ${token}` }
-                }
-            );
+            const response = await axios.put(`${API_URL}/api/users/profile`, updateData, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
 
             setEditMode(false);
-            fetchUserProfile();
+            setUser(response.data);
         } catch (err) {
             setError(err.response?.data?.message || 'Failed to update profile');
         }

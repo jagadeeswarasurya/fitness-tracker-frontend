@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from '../../slices/authSlice';
 import axios from 'axios';
 import './Auth.css';
+import { API_URL } from '../../config/config';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -38,7 +39,7 @@ const Login = () => {
         setLoading(true);
 
         try {
-            const response = await axios.post('http://localhost:5000/api/users/login', formData);
+            const response = await axios.post(`${API_URL}/api/users/login`, formData);
             const { token, user } = response.data;
             
             // Save token to localStorage

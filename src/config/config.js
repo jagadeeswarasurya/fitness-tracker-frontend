@@ -1,0 +1,1 @@
+export const API_URL = 'https://fitness-tracker-backend-3udx.onrender.com'; 

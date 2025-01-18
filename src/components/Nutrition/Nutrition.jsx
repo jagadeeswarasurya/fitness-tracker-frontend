@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Nutrition.css';
+import { API_URL } from '../../config/config';
 
 const Nutrition = () => {
     const [nutritionEntries, setNutritionEntries] = useState([]);
@@ -22,17 +23,12 @@ const Nutrition = () => {
     const fetchNutrition = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get(
-                'http://localhost:5000/api/nutrition',
-                {
-                    headers: { Authorization: `Bearer ${token}` }
-                }
-            );
-            console.log('Fetched nutrition:', response.data);
+            const response = await axios.get(`${API_URL}/api/nutrition`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
             setNutritionEntries(response.data);
             setLoading(false);
         } catch (err) {
-            console.error('Error fetching nutrition:', err);
             setError(err.response?.data?.message || 'Failed to fetch nutrition data');
             setLoading(false);
         }
@@ -74,30 +70,12 @@ const Nutrition = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setFormError(null);
-        
         try {
             const token = localStorage.getItem('token');
-            
-            if (editingEntry) {
-                await axios.put(
-                    `http://localhost:5000/api/nutrition/${editingEntry._id}`,
-                    newEntry,
-                    {
-                        headers: { Authorization: `Bearer ${token}` }
-                    }
-                );
-            } else {
-                await axios.post(
-                    'http://localhost:5000/api/nutrition',
-                    newEntry,
-                    {
-                        headers: { Authorization: `Bearer ${token}` }
-                    }
-                );
-            }
-            
-            await fetchNutrition();
+            const response = await axios.post(`${API_URL}/api/nutrition`, newEntry, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setNutritionEntries([...nutritionEntries, response.data]);
             setNewEntry({
                 foodItem: '',
                 calories: '',
@@ -109,7 +87,7 @@ const Nutrition = () => {
             setShowForm(false);
             setEditingEntry(null);
         } catch (err) {
-            setFormError(err.response?.data?.message || 'Failed to save entry');
+            setError(err.response?.data?.message || 'Failed to create nutrition entry');
         }
     };
 

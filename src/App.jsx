@@ -13,6 +13,7 @@ import Nutrition from './components/Nutrition/Nutrition';
 import FitnessGoals from './components/FitnessGoals/FitnessGoals';
 import ProtectedRoute from './components/ProtectedRoute';
 import axios from 'axios';
+import { API_URL } from './config/config';
 
 function App() {
     const dispatch = useDispatch();
@@ -22,7 +23,7 @@ function App() {
             const token = localStorage.getItem('token');
             if (token) {
                 try {
-                    const response = await axios.get('http://localhost:5000/api/users/profile', {
+                    const response = await axios.get(`${API_URL}/api/users/profile`, {
                         headers: { Authorization: `Bearer ${token}` }
                     });
                     dispatch(setUser({ user: response.data, token }));

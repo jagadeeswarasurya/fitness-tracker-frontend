@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './FitnessGoals.css';
+import { API_URL } from '../../config/config';
 
 const FitnessGoals = () => {
     const [goals, setGoals] = useState([]);
@@ -22,7 +23,7 @@ const FitnessGoals = () => {
     const fetchGoals = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get('http://localhost:5000/api/fitness-goals', {
+            const response = await axios.get(`${API_URL}/api/fitnessgoals`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setGoals(response.data);
@@ -44,13 +45,9 @@ const FitnessGoals = () => {
         e.preventDefault();
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.post(
-                'http://localhost:5000/api/fitness-goals',
-                newGoal,
-                {
-                    headers: { Authorization: `Bearer ${token}` }
-                }
-            );
+            const response = await axios.post(`${API_URL}/api/fitnessgoals`, newGoal, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
             setGoals([...goals, response.data]);
             setShowForm(false);
             setNewGoal({
@@ -60,7 +57,7 @@ const FitnessGoals = () => {
                 description: ''
             });
         } catch (err) {
-            setError(err.response?.data?.message || 'Failed to add goal');
+            setError(err.response?.data?.message || 'Failed to create goal');
         }
     };
 
@@ -68,7 +65,7 @@ const FitnessGoals = () => {
         if (window.confirm('Are you sure you want to delete this goal?')) {
             try {
                 const token = localStorage.getItem('token');
-                await axios.delete(`http://localhost:5000/api/fitness-goals/${goalId}`, {
+                await axios.delete(`${API_URL}/api/fitness-goals/${goalId}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setGoals(goals.filter(goal => goal._id !== goalId));
@@ -82,7 +79,7 @@ const FitnessGoals = () => {
         try {
             const token = localStorage.getItem('token');
             const response = await axios.patch(
-                `http://localhost:5000/api/fitness-goals/${goalId}/progress`,
+                `${API_URL}/api/fitness-goals/${goalId}/progress`,
                 { progress: newProgress },
                 {
                     headers: { Authorization: `Bearer ${token}` }

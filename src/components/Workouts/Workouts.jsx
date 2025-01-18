@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Workouts.css';
+import { API_URL } from '../../config/config';
 
 const Workouts = () => {
     const [workouts, setWorkouts] = useState([]);
@@ -20,12 +21,9 @@ const Workouts = () => {
     const fetchWorkouts = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get(
-                'http://localhost:5000/api/workouts',
-                {
-                    headers: { Authorization: `Bearer ${token}` }
-                }
-            );
+            const response = await axios.get(`${API_URL}/api/workouts`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
             setWorkouts(response.data);
             setLoading(false);
         } catch (err) {
@@ -72,26 +70,10 @@ const Workouts = () => {
         
         try {
             const token = localStorage.getItem('token');
-            
-            if (editingWorkout) {
-                await axios.put(
-                    `http://localhost:5000/api/workouts/${editingWorkout._id}`,
-                    newWorkout,
-                    {
-                        headers: { Authorization: `Bearer ${token}` }
-                    }
-                );
-            } else {
-                await axios.post(
-                    'http://localhost:5000/api/workouts',
-                    newWorkout,
-                    {
-                        headers: { Authorization: `Bearer ${token}` }
-                    }
-                );
-            }
-            
-            await fetchWorkouts();
+            const response = await axios.post(`${API_URL}/api/workouts`, newWorkout, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setWorkouts([...workouts, response.data]);
             setNewWorkout({
                 exercise: '',
                 duration: '',
@@ -101,7 +83,7 @@ const Workouts = () => {
             setShowForm(false);
             setEditingWorkout(null);
         } catch (err) {
-            setFormError(err.response?.data?.message || 'Failed to save workout');
+            setError(err.response?.data?.message || 'Failed to create workout');
         }
     };
 

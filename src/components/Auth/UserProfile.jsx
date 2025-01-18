@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './UserProfile.css';
+import { API_URL } from '../../config/config';
 
 const UserProfile = () => {
     const [profileData, setProfileData] = useState(null);
@@ -21,15 +22,13 @@ const UserProfile = () => {
     const fetchProfileData = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get('http://localhost:5000/api/users/profile', {
+            const response = await axios.get(`${API_URL}/api/users/profile`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setProfileData(response.data);
             setFormData({
-                username: response.data.username || '',
-                currentPassword: '',
-                newPassword: '',
-                confirmNewPassword: ''
+                ...formData,
+                username: response.data.username
             });
             setLoading(false);
         } catch (err) {
@@ -47,29 +46,22 @@ const UserProfile = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
-        if (formData.newPassword !== formData.confirmNewPassword) {
-            setError('New passwords do not match');
-            return;
-        }
+        setError(null);
 
         try {
             const token = localStorage.getItem('token');
             const updateData = {
                 username: formData.username,
-                ...(formData.currentPassword && formData.newPassword ? {
+                ...(formData.newPassword && {
                     currentPassword: formData.currentPassword,
                     newPassword: formData.newPassword
-                } : {})
+                })
             };
 
-            const response = await axios.put(
-                'http://localhost:5000/api/users/profile',
-                updateData,
-                {
-                    headers: { Authorization: `Bearer ${token}` }
-                }
-            );
+            await axios.put(`${API_URL}/api/users/profile`, updateData, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
             setProfileData(response.data);
             setEditMode(false);
             setFormData(prev => ({
@@ -78,7 +70,6 @@ const UserProfile = () => {
                 newPassword: '',
                 confirmNewPassword: ''
             }));
-            setError(null);
         } catch (err) {
             setError(err.response?.data?.message || 'Failed to update profile');
         }
