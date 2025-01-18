@@ -23,7 +23,7 @@ const FitnessGoals = () => {
     const fetchGoals = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get(`${API_URL}/api/fitnessgoals`, {
+            const response = await axios.get(`${API_URL}/api/goals`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setGoals(response.data);
@@ -45,7 +45,7 @@ const FitnessGoals = () => {
         e.preventDefault();
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.post(`${API_URL}/api/fitnessgoals`, newGoal, {
+            const response = await axios.post(`${API_URL}/api/goals`, newGoal, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setGoals([...goals, response.data]);
